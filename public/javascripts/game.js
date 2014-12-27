@@ -6,40 +6,12 @@ canvas.width = 800;
 canvas.height = 600;
 document.body.appendChild(canvas);
 
-var bgReady = false;
-var bgImage = new Image();
-bgImage.onload = function () {
-	bgReady = true;
-}
+var bg = entity("images/background.png", canvas.width, canvas.height);
+var hero = entity("images/hero.png", 32, 32);
+hero.speed = 256;
 
-bgImage.src = "images/background.png";
-
-var heroReady = false;
-var heroImage = new Image();
-heroImage.onload = function () {
-	heroReady = true;
-}
-
-heroImage.src = "../images/hero.png";
-
-var monsterReady = false;
-var monsterImage = new Image();
-monsterImage.onload = function () {
-	monsterReady = true;
-}
-
-monsterImage.src = "images/monster.png";
-
-var hero = {
-	speed: 256,
-	x: 0,
-	y: 0
-};
-
-var monster = {
-	x: 0,
-	y: 0
-};
+var monsters = [];
+var entities = [bg, hero];
 
 var monstersCaught = 0;
 
@@ -54,15 +26,20 @@ addEventListener("keyup", function (e) {
 }, false);
 
 var spawnMonster = function () {
-	monster.x = 32 + (Math.random() * (canvas.width - 64));
-	monster.y = 32 + (Math.random() * (canvas.height - 64));
+	var monster = entity("images/monster.png", 32, 32);
+	monster.x = (Math.random() * (canvas.width - monster.width));
+	monster.y = (Math.random() * (canvas.height - monster.height));
+	monsters.push(monster);
 }
 
 var reset = function () {
-	hero.x = canvas.width / 2;
-	hero.y = canvas.height / 2;
+	hero.x = bg.width / 2;
+	hero.y = bg.height / 2;
 
-	spawnMonster();	
+	monsters = [];
+	for(var i = 0; i < 3; i += 1) {
+		spawnMonster();
+	}
 };
 
 var update = function (modifier) {
@@ -95,28 +72,29 @@ var update = function (modifier) {
 		}
 	}
 
-	if (
-		hero.x <= (monster.x + 32)
-		&& monster.x <= (hero.x + 32)
-		&& hero.y <= (monster.y + 32)
-		&& monster.y <= (hero.y + 32)
-	) {
-		monstersCaught += 1;
-		spawnMonster();
+	for(var i = 0; i < monsters.length; i += 1) {
+		var monster = monsters[i];
+		if (hero.collidesWith(monster)) {
+			monstersCaught += 1;
+			monsters.splice(i, 1);
+			i -= 1;
+			spawnMonster();
+		}
 	}
+	
 };
 
 var render = function () {
-	if (bgReady) {
-		ctx.drawImage(bgImage, 0, 0);
+	for(var i = 0; i < entities.length; i += 1) {
+		if (entities[i].imgLoaded) {
+			ctx.drawImage(entities[i].image, entities[i].x, entities[i].y);
+		}
 	}
 
-	if (heroReady) {
-		ctx.drawImage(heroImage, hero.x, hero.y);
-	}
-
-	if (monsterReady) {
-		ctx.drawImage(monsterImage, monster.x, monster.y);
+	for(var i = 0; i < monsters.length; i += 1) {
+		if (monsters[i].imgLoaded) {
+			ctx.drawImage(monsters[i].image, monsters[i].x, monsters[i].y);
+		}
 	}
 
 	ctx.fillStyle = "rgb(0, 0, 0)";

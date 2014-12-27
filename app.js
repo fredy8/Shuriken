@@ -17,7 +17,7 @@ app.use(bodyParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 if(app.get('env') === 'development') {
-	  app.use(errorhandler());
+	app.use(errorhandler());
 }
 
 app.get('/', routes.index);
