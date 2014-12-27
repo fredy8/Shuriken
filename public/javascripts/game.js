@@ -53,26 +53,46 @@ addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode];
 }, false);
 
+var spawnMonster = function () {
+	monster.x = 32 + (Math.random() * (canvas.width - 64));
+	monster.y = 32 + (Math.random() * (canvas.height - 64));
+}
+
 var reset = function () {
 	hero.x = canvas.width / 2;
 	hero.y = canvas.height / 2;
 
-	monster.x = 32 + (Math.random() * (canvas.width - 64));
-	monster.y = 32 + (Math.random() * (canvas.height - 64));
+	spawnMonster();	
 };
 
 var update = function (modifier) {
 	if (38 in keysDown) {
-		hero.y -= hero.speed * modifier;
+		if (hero.y > 0) {
+			hero.y -= hero.speed * modifier;
+		} else {
+			hero.y = 0;
+		}
 	}
 	if (40 in keysDown) {
-		hero.y += hero.speed * modifier;
+		if (hero.y + 32 < canvas.height) {
+			hero.y += hero.speed * modifier;
+		} else {
+			hero.y = canvas.height - 32;
+		}
 	}
 	if (37 in keysDown) {
-		hero.x -= hero.speed * modifier;
+		if (hero.x > 0) {
+			hero.x -= hero.speed * modifier;
+		} else {
+			hero.x = 0;
+		}
 	}
 	if (39 in keysDown) {
-		hero.x += hero.speed * modifier;
+		if (hero.x + 32 < canvas.width) {
+			hero.x += hero.speed * modifier;
+		} else {
+			hero.x = canvas.width - 32;
+		}
 	}
 
 	if (
@@ -82,7 +102,7 @@ var update = function (modifier) {
 		&& monster.y <= (hero.y + 32)
 	) {
 		monstersCaught += 1;
-		reset();
+		spawnMonster();
 	}
 };
 
