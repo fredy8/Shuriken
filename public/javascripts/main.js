@@ -7,14 +7,20 @@
 	canvas.height = 600;
 	document.body.appendChild(canvas);
 
-	var keysDown = {};
+	var keyEvents = {
+		down: {},
+		justPressed: {},
+		justReleased: {}
+	};
 
 	addEventListener("keydown", function (e) {
-		keysDown[e.keyCode] = true;
+		keyEvents.down[e.keyCode] = true;
+		keyEvents.justPressed[e.keyCode] = true;
 	}, false);
 
 	addEventListener("keyup", function (e) {
-		delete keysDown[e.keyCode];
+		delete keyEvents.down[e.keyCode];
+		keyEvents.justReleased[e.keyCode];
 	}, false);
 
 	var renderer = Renderer(ctx);
@@ -25,8 +31,11 @@
 		var now = Date.now();
 		var delta = now - then;
 
-		game.update(delta / 1000, keysDown);
+		game.update(delta / 1000, keyEvents);
 		game.draw(renderer);
+
+		keyEvents.justPressed = {};
+		keyEvents.justReleased = {};
 
 		then = now;
 		requestAnimationFrame(loop);
