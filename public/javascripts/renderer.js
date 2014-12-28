@@ -24,17 +24,17 @@ var Renderer = function(ctx) {
 		if(!(image in images)) {
 			throw new Error("Images should be preloaded.");
 		}
-		
+
 		var pos, size;
-		if(x && !isUndefined(x.x) && !isUndefined(x.width)) {
+		if(x && isDefined(x.x) && isDefined(x.width)) {
 			pos = Point(x);
 			size = Size(x);
-		} else if(x && !isUndefined(x.x)) {
+		} else if(x && isDefined(x.x)) {
 			pos = Point(x);
-			size = isUndefined(y) ? images[image] : Size(y, width);
+			size = !isDefined(y) ? images[image] : Size(y, width);
 		} else {
 			pos = Point(x, y);
-			size = isUndefined(width) ? images[image] : Size(width, height);
+			size = !isDefined(width) ? images[image] : Size(width, height);
 		}
 
 		ctx.drawImage(images[image], pos.x, pos.y, size.width, size.height);

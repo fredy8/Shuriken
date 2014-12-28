@@ -3,7 +3,7 @@ var Game = function(dimension) {
 
 	var map = Map("images/background.png");
 
-	var hero = Entity("images/hero.png", Point(50, 50), Size(200, 200));
+	var hero = Entity("images/hero.png", Point(50, 50), Size(300, 300));
 	map.entities.push(hero);
 
 	var spawnMonster = function () {
@@ -14,7 +14,7 @@ var Game = function(dimension) {
 		map.entities.push(monster);
 	}
 
-	for (var i = 0; i < 10; i += 1) {
+	for (var i = 0; i < 100; i += 1) {
 		spawnMonster();
 	}
 
@@ -30,7 +30,7 @@ var Game = function(dimension) {
 	that.update = function (modifier, keysDown) {
 		for (var key in keysDown) {
 			if(key in movement) {
-				hero.move(movement[key].scale(250 * modifier));
+				hero.move(movement[key].scale(500 * modifier));
 			}
 		}
 

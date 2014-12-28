@@ -1,7 +1,7 @@
 var Point = function(x, y) {
 	var that = {};
 
-	if(x && !isUndefined(x.x)) {
+	if(x && isDefined(x.x)) {
 		that.x = x.x;
 		that.y = x.y;
 	} else {
@@ -39,7 +39,7 @@ var Size = function(width, height) {
 
 	var that = {};
 
-	if(width && !isUndefined(width.width)) {
+	if(width && isDefined(width.width)) {
 		that.width = width.width;
 		that.height = width.height;
 	} else {
@@ -82,8 +82,8 @@ var Box = function(pos, size) {
 	return that;
 };
 
-var isUndefined = function(obj) {
-	return typeof obj === "undefined";
+var isDefined = function(obj) {
+	return typeof obj !== "undefined";
 };
 
 requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
