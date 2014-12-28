@@ -1,28 +1,22 @@
-var entity = function(imgSrc, width, height, x, y) {
-	x = x || 0;
-	y = y || 0;
-
-	var img = new Image();
-	var obj = {
-		x: x,
-		y: y,
-		width: width,
-		height: height,
-		image: img,
-		imgLoaded: false,
-		collidesWith: function(other) {
-			return  obj.x < other.x + other.width &&
-					obj.x + obj.width > other.x &&
-					obj.y < other.y + other.height &&
-					obj.height + obj.y > other.y;
-		}
-	}
-	
-	img.onload = function() {
-		obj.imgLoaded = true;
+var Entity = function(image, pos, size) {
+	if(!image) {
+		throw new Error('image cannot be undefined.');
 	}
 
-	img.src = imgSrc;
+	if(!pos) {
+		throw new Error('pos cannot be undefined.');
+	}
 
-	return obj;
+	if(!size) {
+		throw new Error('size cannot be undefined.');
+	}
+
+	var that = Box(pos, size);
+	that.image = image;
+	that.speed = Vector();
+	that.update = function(modifier) {
+		that.move(that.speed.scale(modifier));
+	}
+
+	return that;
 }
